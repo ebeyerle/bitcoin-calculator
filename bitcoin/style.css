@@ -1,0 +1,128 @@
+body{
+  background-color: white;
+  margin: auto;
+}
+
+td{
+  border: 2px solid black;
+  border-collapse: collapse;
+}
+
+button{
+  background-color: #f7c40a;
+  height: 30px;
+  float: left;
+  border-radius: 10%;
+  padding: 5px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: #fce300;
+  color: black;
+}
+
+#title{
+  text-align: center;
+  color: black;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+.container1 {
+  height: 300px;
+  display: block;
+  background-color: blue;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.left-block {
+  position: relative;
+  width: 33%;
+  height: 600px;
+  max-height: 600px;
+  padding: 60px;
+  float: left;
+  background-color: yellow;
+}
+
+.right-block {
+  position: relative;
+  width: 33%;
+  height: 600px;
+  max-height: 600px;
+  padding: 60px;
+  float: left;
+  background-color: red;
+}
+
+.block{
+  float: left;
+  width: 40%;
+}
+
+.block2{
+
+  float: ;
+  
+}
+
+.container2{
+  position: relative;
+  height: 300px;
+  background-color: yellow;
+}
+
+.container3{
+  position: relative;
+  margin-top: 250px;
+  height: 300px;
+  background-color: red;
+}
+
+.balance{
+  width: 1000px;
+  float: left;
+  margin-left: 160px;
+}
+
+.value{
+  width: 1000px;
+  float: leftt;
+  margin-right: 120px;
+  margin-bottom: 200px;
+}
+
+.row-header{
+  width: 120px;
+}
+
+.cell{
+  width: 30px;
+}
+
+#calculator{
+  width: 500px;
+  height: 220px;
+  text-align: center;
+  margin: auto;
+  margin-left: 100px;
+  margin-top: 20px;
+  float: left;
+  font-family: ;
+  background-color: #f2f0dc;
+  border-radius: 10px;
+}
+
+#rate_table{
+  width: 500px;
+  height: 220px;
+  text-align: center;
+  margin: auto;
+  margin-right: 100px;
+  padding: 50;
+  float: right;
+  background-color: #f2f0dc;
+  border-radius: 10px;
+}
