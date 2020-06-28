@@ -24,34 +24,42 @@
   <div class="container1">
   
   <div id="calculator" class="block">
-  <h3>Simple Calculator</h3>
-  <h4>Periodic End Balance Calc</h4>
+  <h3 class="styled-text">Simple Calculator</h3>
+  <h4 class="styled-text">Periodic End Balance Calc</h4>
   
   <table style="width:50%">
     <tr>
-	  <th>Initial Investment</th>
-	  <th>Effective Rate</th>
-	  <th>Daily Rate</th>
-	  <th>Period(s)</th>
-	  <th>Year End Balance</th>
+	  <th class="styled-text">Initial Investment</th>
+	  <th class="styled-text">Effective Rate</th>
+	  <th class="styled-text">Daily Rate</th>
+	  <th class="styled-text">Period(s)</th>
+	  <th class="styled-text">Year End Balance</th>
 	</tr>
 	<tr>
 	  <td><input type="text" id="investment" name="investment"></td>
-	  <td>3.7%</td>
+	  <td id="effective_rate">---</td>
 	  <td>.01%</td>
 	  <td>365</td>
 	  <td id="balance">---</td>
+	</tr>
+	  <td colspan="2">Beginning Units:</td>
+	  <td id="beg_units"></td>
+	  <td>Interest:</td>
+	  <td id="new_interest"></td>
+	<tr>
 	</tr>
   </table>
   
   <button onclick="calculate()">Calculate</button>
   
+
   </div>
   
   <br>
   
   
   <div id="rate_table" class="block">
+  <h4 class="styled-text">Rate Table</h4>
   <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
@@ -67,9 +75,9 @@
     <th class="tg-0lax">0-5</th>
     <th class="tg-0lax">6.0%</th>
     <th class="tg-0lax">.016</th>
-    <th class="tg-0lax" id="total">Total</th>
-    <th class="tg-0lax">Unit Alloc</th>
-    <th class="tg-0lax">Unit Alloc</th>
+    <th class="tg-0lax" id="btc1-total">Total</th>
+    <th class="tg-0lax" id="unit_all_1">Unit Alloc</th>
+    <th class="tg-0lax" id="illus_unit_1">Unit Alloc</th>
   </tr>
 </thead>
 <tbody>
@@ -78,25 +86,21 @@
     <td class="tg-0lax">&lt;5</td>
     <td class="tg-0lax">3.2%</td>
     <td class="tg-0lax">.009</td>
-    <td class="tg-0lax">Total</td>
-    <td class="tg-0lax">Unit Alloc</td>
-    <td class="tg-0lax">Unit Alloc</td>
+    <td class="tg-0lax" id="btc2-total">Total</td>
+    <td class="tg-0lax" id="unit_all_2" >Unit Alloc</td>
+    <td class="tg-0lax" id="illus_unit_2">Unit Alloc</td>
   </tr>
   <tr>
-    <td class="tg-0lax" colspan="2">Period End Total</td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
+    <td class="tg-0lax" colspan="4">Period End Total</td>
+    <td class="tg-0lax" id="peroid_end_total"></td>
+    <td class="tg-0lax" id="end_simple_units"></td>
+    <td class="tg-0lax" id="end_illus_units"></td>
   </tr>
   <tr>
-    <td class="tg-0lax" colspan="2">Period Net Units Increase</td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
-    <td class="tg-0lax"></td>
+    <td class="tg-0lax" colspan="4">Period Net Units Increase</td>
+    <td class="tg-0lax" id="net_increase_total"></td>
+    <td class="tg-0lax" id="net_increase_units"></td>
+    <td class="tg-0lax" id="net_increase_illus"></td>
   </tr>
 </tbody>
 </table>
@@ -111,11 +115,11 @@
 
   <br>
   
-  <div>
+ <!-- <div>
     <p>Fill The Table Out</p>
 	<button onclick="illustrate()">Run</button>
   </div>
-  
+  -->
   </div>
   
   <style type="text/css">
@@ -223,7 +227,7 @@
 
   <div class="container3">
 
-  <div class="block2">
+  <div class="block2 price-inputs">
 
   <h3>Initial BTC Price</h3><input type="text" id="initial-price" name="initial-price">
   <h3>Price Appreciation</h3><input type="text" id="price-appreciation" name="price-appreciation">
@@ -327,37 +331,45 @@
   </tr>
 </tbody>
 </table>
+</div>
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-r11c{border-color:#ffffff;color:#3531ff;font-family:Verdana, Geneva, sans-serif !important;;font-size:16px;text-align:left;
-  vertical-align:top}
-</style>
-<table class="tg">
-<thead>
-  <tr>
-    <th class="tg-r11c">End of Month Price</th>
-    <th class="tg-r11c" id="month_price1">$</th>
-    <th class="tg-r11c" id="month_price2">$</th>
-    <th class="tg-r11c" id="month_price3">$</th>
-    <th class="tg-r11c" id="month_price4">$</th>
-    <th class="tg-r11c" id="month_price5">$</th>
-    <th class="tg-r11c" id="month_price6">$</th>
-    <th class="tg-r11c" id="month_price7">$</th>
-    <th class="tg-r11c" id="month_price8">$</th>
-    <th class="tg-r11c" id="month_price9">$</th>
-    <th class="tg-r11c" id="month_price10">$</th>
-    <th class="tg-r11c" id="month_price11">$</th>
-    <th class="tg-r11c" id="month_price12">$</th>
-  </tr>
-</thead>
-</table>
-      </div>
-
+	<div class="container4">
+	<style type="text/css">
+	.tg  {border-collapse:collapse;border-spacing:0;}
+	.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+	  overflow:hidden;padding:10px 5px;word-break:normal;}
+	.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+	  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+	.tg .tg-r11c{border-color:#ffffff;color:#3531ff;font-family:Verdana, Geneva, sans-serif !important;;font-size:16px;text-align:left;
+	  vertical-align:top}
+	</style>
+	<table class="tg monthly-price">
+	<thead>
+	  <tr>
+		<th class="tg-r11c">End of Month Price</th>
+		<th class="tg-r11c" id="month_price1">$</th>
+		<th class="tg-r11c" id="month_price2">$</th>
+		<th class="tg-r11c" id="month_price3">$</th>
+		<th class="tg-r11c" id="month_price4">$</th>
+		<th class="tg-r11c" id="month_price5">$</th>
+		<th class="tg-r11c" id="month_price6">$</th>
+		<th class="tg-r11c" id="month_price7">$</th>
+		<th class="tg-r11c" id="month_price8">$</th>
+		<th class="tg-r11c" id="month_price9">$</th>
+		<th class="tg-r11c" id="month_price10">$</th>
+		<th class="tg-r11c" id="month_price11">$</th>
+		<th class="tg-r11c" id="month_price12">$</th>
+	  </tr>
+	</thead>
+	</table>
+		<div class="text-block">
+		<p>Beginning Value:</p>
+		<p>Add: Accumulated Cost Basis of New Bitcoin:</p>
+		<p>Add: Unrealized Gain(Loss) on New Bitcoin:</p>
+		<p>Total: Year End Market:</p>
+		</div>
+	</div>
+</div>
     </div>
   </div>
 
