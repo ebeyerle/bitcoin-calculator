@@ -1,11 +1,24 @@
 var pv = 0;
 var rate = 0;
+var illus_rate = 0;
 var year_end_balance = [];
 var days = [31,28,31,30,31,30,31,31,30,31,30,31];
 var btc_totals = [];
+var illus_totals = [];
 var beginning_balances = [];
 var interest_list = [];
 var ending_balances = [];
+
+var future_beginnings = [];
+var future_interests = [];
+var future_gains = [];
+
+var future_end_units = 0;
+var final_price = 0;
+
+function refresh(){
+  location.reload();
+}
 
 function calculate(){
   var investment = document.getElementById("investment").value;
@@ -15,6 +28,8 @@ function calculate(){
   var interest_output = document.getElementById("new_interest");
   
   var interest = 0;
+  
+  investment = Math.abs(investment);
   
   pv = investment;
   
@@ -35,7 +50,7 @@ function calculate(){
   output.innerHTML = investment.toFixed(3);
   interest_output.innerHTML = interest.toFixed(3);
   
-  illustrate();
+  //illustrate();
 }
 
 function calc_rates(){
@@ -235,16 +250,55 @@ function illus_allocate2(){
   return x;
 }
 
+function updateRateTable(val){
+  var end_total_output = document.getElementById("end_illus_units");
+  var units_increase_output = document.getElementById("net_increase_illus");
+  
+  var rate_output = document.getElementById("test1");
+  var balance_output = document.getElementById("test2");
+  var daily_output = document.getElementById("daily");
+  
+  var interest_output = document.getElementById("bitcoin_interest");
+  var end_output = document.getElementById("bitcoin_end");
+  
+  var sum = 0;
+  var daily_rate = 0;
+  var prev_rate = 0;
+  
+  sum = val - 10;
+  sum = sum.toFixed(3);
+  
+  illus_rate = sum/(val - sum);
+  prev_rate = illus_rate;
+  illus_rate = 100 * illus_rate;
+  illus_rate = illus_rate.toFixed(1);
+  
+  daily_rate = illus_rate/365;
+  
+  end_total_output.innerHTML = val;
+  units_increase_output.innerHTML = sum;
+  
+  interest_output.innerHTML = prev_rate*10;
+  end_output.innerHTML = val;
+  
+  rate_output.innerHTML = illus_rate+"%";
+  balance_output.innerHTML = val;
+  daily_output.innerHTML = daily_rate.toFixed(3)+"%";
+  
+  future_end_units = val;
+}
+
 function illustrate(){
 	
+  var initial = document.getElementById("initial_illus").value;
+  
   var n = 0;
-  var initial = 10;  
-	
+
   for(var i = 0; i < 12; i++){
     var beg_balance = document.getElementById("beg_balance_"+String(i+1));
     var interest = document.getElementById("interest_"+String(i+1));
     var end_balance = document.getElementById("end_balance_"+String(i+1));
-  
+
     var end = 0;
     var diff = 0;
 
@@ -253,7 +307,7 @@ function illustrate(){
     console.log(n);
     end = get_ending(n);
     diff = end - initial;
-    
+
 	beginning_balances.push(initial);
 	interest_list.push(diff.toFixed(3));
 	ending_balances.push(end);
@@ -265,7 +319,9 @@ function illustrate(){
 
     initial = end;	
   }
- 
+  updateRateTable(end);
+  
+
 }
 
 function get_ending(n){
@@ -299,6 +355,37 @@ function ending_prices(){
   year_end.innerHTML = sum;
   
   update_price_table(parseInt(initial_price), sum);
+  
+  get_final_results();
+}
+
+function get_final_results(){
+  var beginning_output = document.getElementById("btc_beg_value");
+  var accumulated_output = document.getElementById("btc_accumulated_cost");
+  var gain_output = document.getElementById("btc_gain");
+  var end_output = document.getElementById("btc_year_end");
+  
+  var sum = 0;
+  var total = 0;
+  
+  sum = getAccumulated();
+  total = future_end_units * final_price;
+  
+  beginning_output.innerHTML = future_beginnings[0];
+  accumulated_output.innerHTML = sum;
+  gain_output.innerHTML = future_gains[11];
+  end_output.innerHTML = total.toFixed(0);
+}
+
+function getAccumulated(){
+  
+  var sum = 0;
+  
+  for(var i = 0; i < future_interests.length; i++){
+	sum += future_interests[i];
+  }
+  
+  return sum;
 }
 
 function update_price_table(price, end){
@@ -336,6 +423,10 @@ function update_price_table(price, end){
 		end_sum = parseInt(end_sum);
 		gain = parseInt(gain);
 		
+		future_beginnings.push(beg_sum);
+		future_interests.push(interest);
+		future_gains.push(gain);
+		
 		price = end_sum;
 		prev_price = month_sum;
 	  }else{
@@ -357,6 +448,11 @@ function update_price_table(price, end){
 		interest = parseInt(interest);
 		end_sum = parseInt(end_sum);
 		gain = parseInt(gain);
+		
+		future_beginnings.push(beg_sum);
+		future_interests.push(interest);
+		future_gains.push(gain);
+		final_price = month_sum;
 		//month_sum = month_sum.toFixed(0);
 		price = end_sum.toFixed(0);
 	  }

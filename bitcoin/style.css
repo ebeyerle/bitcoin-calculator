@@ -8,9 +8,15 @@ td{
   border-collapse: collapse;
 }
 
+h2{
+  font-family: arial;
+}
+
 button{
   background-color: #f7c40a;
   height: 30px;
+  width: 90px;
+  margin-left: 10px;
   float: left;
   border-radius: 10%;
   padding: 5px;
@@ -32,7 +38,7 @@ button:hover{
 .container1 {
   height: 300px;
   display: block;
-  background-color: blue;
+  background-color: white;
   margin-right: auto;
   margin-left: auto;
 }
@@ -68,11 +74,21 @@ button:hover{
   
 }
 
+.block3{
+  position: relative;
+  float: right;
+  margin-right: 150px;
+}
+
+table .illus_totals{
+  border: none;
+}
+
 .text-block{
   position: absolute;
   margin-top: 40px;
   font-family: Helvetica, sans-serif;
-  float: right;
+  float: left;
 }
 
 .results-block{
@@ -84,6 +100,15 @@ button:hover{
 
 .styled-text{
   font-family: Arial;
+}
+
+.table_label{
+  float: right;
+  font-family: Helvetica, sans-serif;
+}
+
+.rate_cell{
+  width: 30px;
 }
 
 .container2{
@@ -99,8 +124,8 @@ button:hover{
 
 .container4{
   position: relative;
-  margin-top: 280px;
-  height: 80px;
+  margin-top: 350px;
+  height: 150px;
 }
 
 .balance{
@@ -122,12 +147,12 @@ button:hover{
   position: absolute;
 }
 
-.monthly-price{
-  position: absolute;
-  margin-top: 0px;
-  margin-right: 100px;
+#monthly-price{
+  position: relative;
+  margin-top: 50px;
+  margin-right: 400px;
   float: right;
-  width: 800px;
+  width: 100px;
 }
 
 .row-header{
@@ -142,6 +167,17 @@ button:hover{
   float: left;
   font-family: Arial;
   padding: 15px;
+}
+
+.btc_results{
+  float: right;
+}
+
+#reset{
+  position: fixed;
+  float: right;
+  margin-left: 1200px;
+  z-index: 2;
 }
 
 #calculator{
@@ -167,4 +203,14 @@ button:hover{
   float: right;
   background-color: #f2f0dc;
   border-radius: 10px;
+}
+
+#year_end_table{
+  margin-top: 100px;
+  margin-left: 30px;
+}
+
+#illustrate_inputs{
+  margin: auto;
+  
 }
