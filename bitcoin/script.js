@@ -1,9 +1,13 @@
 var pv = 0;
 var rate = 0;
+var initial_illus = 0;
 var illus_rate = 0;
+var global_end_total = 0;
+var global_interest = 0;
 var year_end_balance = [];
 var days = [31,28,31,30,31,30,31,31,30,31,30,31];
 var btc_totals = [];
+var illus_unit_alloc = [];
 var illus_totals = [];
 var beginning_balances = [];
 var interest_list = [];
@@ -34,20 +38,23 @@ function calculate(){
   pv = investment;
   
   investment = (1+.037) * Math.abs(investment);
-  year_end_balance.push(investment.toFixed(3));
+  //year_end_balance.push(investment.toFixed(3));
   
-  interest = investment - Math.abs(pv);
+  calc_rates();
+  
+  //interest = investment - Math.abs(pv);
   
   beg_output.innerHTML = Math.abs(pv);
   
-  calc_rates();
+  
+  interest = year_end_balance[0] - Math.abs(pv);
   
   console.log(year_end_balance+"One");  
   
   rate = rate * 100;
   
   rate_output.innerHTML = rate.toFixed(1)+"%";
-  output.innerHTML = investment.toFixed(3);
+  output.innerHTML = year_end_balance[0];
   interest_output.innerHTML = interest.toFixed(3);
   
   //illustrate();
@@ -56,32 +63,30 @@ function calculate(){
 function calc_rates(){
   var total_1 = document.getElementById("btc1-total");
   var unit_output1 = document.getElementById("unit_all_1");
-  var illus_output1 = document.getElementById("illus_unit_1");
+
   var total_2 = document.getElementById("btc2-total");
   var unit_output2 = document.getElementById("unit_all_2");
-  var illus_output2 = document.getElementById("illus_unit_2");
+
   
   var btc1_total = 0;
   var btc2_total = 0;
   var unit_allocation = 0;
   var unit_allocation2 = 0;
-  var illus_allocation = 0;
-  var illus_allocation2 = 0;
+
   
   btc1_total = total();
   btc2_total = total2();
   unit_allocation = allocate();
   unit_allocation2 = allocate2();
-  illus_allocation = illus_allocate();
-  illus_allocation2 = illus_allocate2();
+
   
   total_1.innerHTML = btc1_total;
   unit_all_1.innerHTML = unit_allocation;
-  illus_output1.innerHTML = illus_allocation;
+
   
   total_2.innerHTML = btc2_total;
   unit_all_2.innerHTML = unit_allocation2;
-  illus_output2.innerHTML = illus_allocation2;
+
   
   period_end();
   period_increases(unit_allocation);
@@ -96,8 +101,10 @@ function period_end(){
   
   
   end_total = getEndTotal();
+  year_end_balance.push(end_total);
+  //global_end_total = end_total;
 
-  console.log(year_end_balance+"Two");
+  //console.log(year_end_balance+"Two");
   period_total_output.innerHTML = end_total;
   end_simple_output.innerHTML = year_end_balance[0];
 }
@@ -110,6 +117,7 @@ function period_increases(units){
   var total_increase = getTotalIncrease();
   var unit_increase = getUnitIncrease(units);
   
+  //console.log("****Period Net Increase ->"+total_increase)
   total_increase_output.innerHTML = total_increase.toFixed(3);
   unit_increase_output.innerHTML = unit_increase;
   
@@ -117,7 +125,7 @@ function period_increases(units){
 }
 
 function getTotalIncrease(){
-  
+  //console.log("***year_end_balance->"+year_end_balance[0]+", pv->"+pv);
   return year_end_balance[0] - pv;
   
 }
@@ -142,8 +150,9 @@ function setEffectiveRate(units){
   var sum = 0;
   
   sum = units/(end_total-units);
+  //sum = 1.333/(37.833-1.333);
   
-  console.log("---"+end_total+"-"+units+"--->"+sum);
+  //console.log("---"+end_total+"-"+units+"--->"+sum);
   
   rate = sum.toFixed(3);
 }
@@ -164,13 +173,13 @@ function total(){
 
   if(Math.abs(pv) < 5){
     //fv(.016, 365, 0, investment);
-	future_val = fv(pv, .016, 365);
+	future_val = fv(pv, .016438, 365);
   }else{
     //fv(.016, 365, 0, -5);
-	future_val = fv(5, .016, 365);
+	future_val = fv(5, .016438, 365);
   }
   
-  console.log(future_val);
+  //console.log(future_val);
   btc_totals.push(parseFloat(future_val));
   
   return future_val;
@@ -179,7 +188,7 @@ function total(){
 function total2(){
 
   //var total = document.getElementById("total");
-  console.log("---in total2---");
+  //console.log("---in total2---");
 
   var future_val = 0;	
   var initial = 0;
@@ -187,9 +196,9 @@ function total2(){
 
   if(Math.abs(pv) > 5){
     //fv(.016, 365, 0, investment);
-	initial = Math.abs(pv)-5
+	initial = Math.abs(pv)-5;
 	
-	future_val = fv(initial, .009, 365);
+	future_val = fv(initial, .008767, 365);
   }else{
     //fv(.016, 365, 0, -5);
 	future_val = 0;
@@ -229,8 +238,8 @@ function allocate2(){
 function illus_allocate(){
   var x = 0;
   
-  if(Math.abs(-10) < 5){
-	x = Math.abs(-10);
+  if(Math.abs(initial_illus) < 5){
+	x = Math.abs(initial_illus);
   }else{
 	x = 5;
   }
@@ -241,8 +250,8 @@ function illus_allocate(){
 function illus_allocate2(){
   var x = 0;
   
-  if(Math.abs(-10) > 5){
-	x = Math.abs(-10) - 5;
+  if(Math.abs(initial_illus) > 5){
+	x = Math.abs(initial_illus) - 5;
   }else{
 	x = 0;
   }
@@ -265,7 +274,8 @@ function updateRateTable(val){
   var daily_rate = 0;
   var prev_rate = 0;
   
-  sum = val - 10;
+  console.log(initial_illus);
+  sum = val - initial_illus;
   sum = sum.toFixed(3);
   
   illus_rate = sum/(val - sum);
@@ -286,13 +296,35 @@ function updateRateTable(val){
   daily_output.innerHTML = daily_rate.toFixed(3)+"%";
   
   future_end_units = val;
+
+}
+
+function updateIllustrationAllocation(){
+  var illus_output1 = document.getElementById("illus_unit_1");
+  var illus_output2 = document.getElementById("illus_unit_2");
+  
+  var illus_allocation = 0;
+  var illus_allocation2 = 0;
+  
+  illus_allocation = illus_allocate();
+  illus_allocation2 = illus_allocate2();
+  
+  illus_unit_alloc.push(illus_allocation);
+  illus_unit_alloc.push(illus_allocation2);
+  
+  illus_output1.innerHTML = illus_allocation;
+  illus_output2.innerHTML = illus_allocation2;
 }
 
 function illustrate(){
 	
   var initial = document.getElementById("initial_illus").value;
+  initial_illus = Math.abs(initial);
+  initial = Math.abs(initial);
   
   var n = 0;
+  
+  updateIllustrationAllocation();
 
   for(var i = 0; i < 12; i++){
     var beg_balance = document.getElementById("beg_balance_"+String(i+1));
@@ -304,9 +336,11 @@ function illustrate(){
 
 	n += days[i];
     //var days = document.getElementById("month1").value;
-    console.log(n);
+    //console.log(n);
     end = get_ending(n);
     diff = end - initial;
+
+    //console.log("End:"+end+"initial:"+initial);
 
 	beginning_balances.push(initial);
 	interest_list.push(diff.toFixed(3));
@@ -320,8 +354,6 @@ function illustrate(){
     initial = end;	
   }
   updateRateTable(end);
-  
-
 }
 
 function get_ending(n){
@@ -330,14 +362,14 @@ function get_ending(n){
   var x2 = 0;
   
   if(investment <= 5){
-    ending = fv(-5, .016, n);
-	console.log("The first ending:"+ending);
+    ending = fv(-illus_unit_alloc[0], .01643835, n);
+	//console.log("The first ending:"+ending);
   }else{
-	x1 = fv(-5, .016, n);
-	x2 = fv(-5, .009, n);
+	x1 = fv(-illus_unit_alloc[0], .01643835, n);
+	x2 = fv(-illus_unit_alloc[1], .00876712, n);
 	ending = parseFloat(x1) + parseFloat(x2);
     //ending = fv(-5, .016, 31) + fv(-31.5, .009, 31);
-	console.log("The second ending:"+ending);
+	//console.log("The second ending:"+ending);
   }
   return Math.abs(ending.toFixed(3));
 }
@@ -349,6 +381,12 @@ function ending_prices(){
   var year_end = document.getElementById("year-end");
   
   var sum = 0;
+  
+  if(appreciation > 1){
+    appreciation = appreciation/100;
+  }else if(appreciation < 0){
+    alert("Please enter a positive number");
+  }
   
   sum = parseFloat(initial_price) * (1 + parseFloat(appreciation));
 
@@ -416,6 +454,7 @@ function update_price_table(price, end){
 	    gain = end_sum.toFixed(0) - beg_sum - interest.toFixed(0);
 
         //month_sum = month_sum;
+		console.log("Month:"+month_sum+", interest:"+interest_list[0]);
 		
 		beg_sum = parseInt(beg_sum);
 		month_sum = parseInt(month_sum);
@@ -433,7 +472,7 @@ function update_price_table(price, end){
 		//console.log("The price is:"+price+", Gain is:"+gain);
 		//console.log("End is:"+end+", interest_list is:"+interest_list[i]);
 		beg_sum = price - gain;
-		console.log("End of Month Sum Variables are:: prev_price-"+prev_price+", end-"+end+", init_price-"+init_price);
+		//console.log("End of Month Sum Variables are:: prev_price-"+prev_price+", end-"+end+", init_price-"+init_price);
 	    month_sum = prev_price +((end - init_price)/12);
 		//month_sum = "Here";
 		//console.log("month_sum is:"+month_sum+", interest_list is:"+interest_list[i]);
@@ -464,7 +503,7 @@ function update_price_table(price, end){
 	  end_price.innerHTML = end_sum.toFixed(0);
 	  
   }
-  
+  month_price.innerHTML = "$"+end;
   
 /*  
   for(var i = 1; i < 12; i++){
